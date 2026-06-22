@@ -91,11 +91,15 @@ All experiments were performed using the following configuration:
   * pip
 
 **Installation**
+
 git clone https://github.com/lucas-lacerda-de-souza/Classification_SRB.git
+
 cd Classification_SRB
 
 **Create Environment**
+
 conda env create -f environment.yml
+
 conda activate Classification_SRB
 
 ---
