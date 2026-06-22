@@ -181,13 +181,19 @@ A total of **675 cases** were included in this international multicentre study.
 **📂 8. Repository Structure**
 
 DATA/                    → Synthetic example data and directory structures
+
 MODELS/                  → Model architectures and inference pipelines
+
 RESULTS/                 → Study results and supplementary outputs
 
 INFERENCE.py             → Inference script
+
 MODEL_CARD.md            → Model documentation
+
 README.md                → Repository documentation
+
 REQUIREMENTS.txt         → Dependency list
+
 LICENSE.txt              → Repository license
 
 ---
