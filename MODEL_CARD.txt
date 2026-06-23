@@ -2,7 +2,8 @@
 
 1. Model Overview
 
-This repository provides a multimodal artificial intelligence framework developed to support the diagnosis and prognostic stratification of head and neck small round blue cell neoplasms (SRBCNs).
+This repository provides a multimodal artificial intelligence framework developed to support the diagnosis and prognostic stratification of head and neck small 
+round blue cell neoplasms (SRBCNs).
 
 The model was designed for four tumour groups:
 
@@ -348,7 +349,8 @@ If you use this repository, please cite the associated manuscript:
 
 de Souza LL et al. Advancing the Diagnosis of Head and Neck Small Round Blue Cell Neoplasms Through Artificial Intelligence. 2026.
 
-Please also acknowledge the original publications and licences for UNI, Virchow, CellViT++, XGBoost, SHAP, PyTorch, and other third-party frameworks used in this repository.
+Please also acknowledge the original publications and licences for UNI, Virchow, CellViT++, XGBoost, SHAP, PyTorch, and other third-party frameworks used in this
+repository.
 
 19. Licence
 
