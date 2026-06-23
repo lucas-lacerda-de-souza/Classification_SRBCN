@@ -1,0 +1,811 @@
+
+Advancing the Diagnosis of Head and Neck Small Round Blue Cell Neoplasms through Artificial Intelligence
+----------------------------------------------------------------------------------
+Author: Lucas Lacerda de Souza
+
+Dependencies:
+    pandas>=2.2.0
+    numpy>=1.26.0
+    matplotlib>=3.10.0
+    lifelines>=0.30.0
+    openpyxl>=3.1.5
+"""
+
+# =========================
+# IMPORTS
+# =========================
+import os
+import warnings
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from lifelines import KaplanMeierFitter, CoxPHFitter
+from lifelines.statistics import multivariate_logrank_test
+from lifelines.exceptions import ConvergenceError
+from lifelines.utils import ConvergenceWarning
+
+warnings.filterwarnings("ignore", category=ConvergenceWarning)
+warnings.filterwarnings("ignore", category=RuntimeWarning)
+
+# ------------------------------------------------------------
+# 1. INPUT AND OUTPUT
+# ------------------------------------------------------------
+
+INPUT_FILE = r"./data/survival/survival_dataset_srbcn.xlsx"
+
+OUTPUT_DIR = r"./results/survival_analysis_srbcn"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+df = pd.read_excel(INPUT_FILE)
+
+# ------------------------------------------------------------
+# 2. STANDARDISE COLUMN NAMES
+# ------------------------------------------------------------
+
+df = df.rename(columns={
+    "Outcome (month)": "time",
+    "Outcome months": "time",
+    "Overall survival": "time",
+    "Survival time": "time",
+    "Status": "status",
+    "Vital status": "status",
+    "Group": "group",
+    "Tumour group": "group",
+    "Diagnosis": "diagnosis",
+    "Age": "age",
+    "Sex": "sex",
+    "Tumour location": "location",
+    "Anatomical location": "location",
+    "Nucleus: Area": "nucleus_area",
+    "Nucleus: Perimeter": "nucleus_perimeter",
+    "Nucleus: Circularity": "nucleus_circularity",
+    "Nucleus: Eccentricity": "nucleus_eccentricity"
+})
+
+# ------------------------------------------------------------
+# 3. PREPARE SURVIVAL DATA
+# ------------------------------------------------------------
+
+status_map = {
+    "Dead": 1,
+    "dead": 1,
+    "DEAD": 1,
+    "Death": 1,
+    "death": 1,
+    "Died": 1,
+    "died": 1,
+    1: 1,
+    "1": 1,
+
+    "Alive": 0,
+    "alive": 0,
+    "ALIVE": 0,
+    "Living": 0,
+    "living": 0,
+    "Censored": 0,
+    "censored": 0,
+    0: 0,
+    "0": 0
+}
+
+df["event"] = df["status"].map(status_map)
+df["time"] = pd.to_numeric(df["time"], errors="coerce")
+
+df = df.dropna(subset=["time", "event"])
+df = df[df["time"] > 0].copy()
+
+for col in df.columns:
+    if df[col].dtype == "object":
+        df[col] = df[col].astype(str).str.strip()
+
+# ------------------------------------------------------------
+# 4. STANDARDISE SRBCN GROUP NAMES
+# ------------------------------------------------------------
+
+group_aliases = {
+    "Hematolymphoid": "Haematolymphoid",
+    "Haematolymphoid tumours": "Haematolymphoid",
+    "Hematolymphoid tumours": "Haematolymphoid",
+
+    "Mesenchymal tumours": "Mesenchymal",
+    "Mesenchymal neoplasms": "Mesenchymal",
+
+    "Neuroectodermal": "Neuroectodermal-Neural-Crest",
+    "Neural crest": "Neuroectodermal-Neural-Crest",
+    "Neural crest-derived": "Neuroectodermal-Neural-Crest",
+    "Neuroectodermal and neural crest-derived": "Neuroectodermal-Neural-Crest",
+    "Neuroectodermal/neural crest": "Neuroectodermal-Neural-Crest",
+
+    "Melanocytic neoplasms": "Melanocytic",
+    "Melanocytic tumours": "Melanocytic"
+}
+
+if "group" in df.columns:
+    df["group"] = df["group"].replace(group_aliases)
+
+# ------------------------------------------------------------
+# 5. HELPER FUNCTIONS
+# ------------------------------------------------------------
+
+def clean_filename(name):
+    return (
+        str(name)
+        .replace(" ", "_")
+        .replace("/", "_")
+        .replace("\\", "_")
+        .replace(":", "_")
+        .replace(";", "_")
+        .replace("(", "")
+        .replace(")", "")
+    )
+
+
+def format_p_value(p):
+    if pd.isna(p):
+        return "—"
+    elif p < 0.001:
+        return "<0.001"
+    else:
+        return f"{p:.3f}"
+
+
+def format_hr_ci(hr, lower, upper):
+    if pd.isna(hr):
+        return "—"
+    return f"{hr:.2f} ({lower:.2f}–{upper:.2f})"
+
+
+def create_km_plot(
+    data,
+    variable,
+    output_dir,
+    time_col="time",
+    event_col="event",
+    min_cases_per_group=5,
+    figsize=(8, 6),
+    max_legend_items=8
+):
+    plot_df = data[[time_col, event_col, variable]].dropna().copy()
+
+    counts = plot_df[variable].value_counts()
+    valid_categories = counts[counts >= min_cases_per_group].index
+    plot_df = plot_df[plot_df[variable].isin(valid_categories)]
+
+    if plot_df[variable].nunique() < 2:
+        return None
+
+    logrank = multivariate_logrank_test(
+        event_durations=plot_df[time_col],
+        groups=plot_df[variable],
+        event_observed=plot_df[event_col]
+    )
+
+    p_value = logrank.p_value
+    kmf = KaplanMeierFitter()
+
+    plt.figure(figsize=figsize)
+    ax = plt.gca()
+
+    groups = sorted(
+        list(plot_df[variable].dropna().unique()),
+        key=lambda x: str(x)
+    )
+
+    for category in groups:
+        group_df = plot_df[plot_df[variable] == category]
+
+        kmf.fit(
+            durations=group_df[time_col],
+            event_observed=group_df[event_col],
+            label=str(category)
+        )
+
+        kmf.plot_survival_function(
+            ax=ax,
+            ci_show=True,
+            linewidth=2
+        )
+
+    title_variable = variable.replace("_grouped", "").replace("_", " ")
+
+    ax.set_title(
+        f"Kaplan–Meier survival according to {title_variable}",
+        fontsize=14,
+        pad=12
+    )
+
+    ax.set_xlabel("Time (months)", fontsize=12)
+    ax.set_ylabel("Overall survival probability", fontsize=12)
+    ax.set_ylim(-0.02, 1.05)
+    ax.tick_params(axis="both", labelsize=10)
+
+    p_text = "Log-rank p < 0.001" if p_value < 0.001 else f"Log-rank p = {p_value:.3f}"
+
+    ax.text(
+        0.03,
+        0.06,
+        p_text,
+        transform=ax.transAxes,
+        fontsize=11,
+        bbox=dict(facecolor="white", edgecolor="none", alpha=0.85)
+    )
+
+    if len(groups) <= max_legend_items:
+        ax.legend(fontsize=9, frameon=False, loc="best")
+    else:
+        ax.legend(
+            fontsize=7,
+            frameon=False,
+            loc="upper center",
+            bbox_to_anchor=(0.5, -0.12),
+            ncol=3
+        )
+
+    plt.tight_layout()
+
+    safe_name = clean_filename(variable)
+
+    png_path = os.path.join(output_dir, f"KM_{safe_name}.png")
+    pdf_path = os.path.join(output_dir, f"KM_{safe_name}.pdf")
+
+    plt.savefig(png_path, dpi=600, bbox_inches="tight")
+    plt.savefig(pdf_path, bbox_inches="tight")
+    plt.close()
+
+    return {
+        "Variable": variable,
+        "Number of groups": plot_df[variable].nunique(),
+        "N": len(plot_df),
+        "Events": int(plot_df[event_col].sum()),
+        "Log-rank p-value": p_value,
+        "Figure PNG": png_path,
+        "Figure PDF": pdf_path
+    }
+
+# ------------------------------------------------------------
+# 6. SURVIVAL SUMMARY BY TUMOUR GROUP
+# ------------------------------------------------------------
+
+if "group" in df.columns:
+    summary_table = df.groupby("group").agg(
+        n=("time", "count"),
+        deaths=("event", "sum"),
+        censored=("event", lambda x: (x == 0).sum()),
+        median_follow_up_months=("time", "median"),
+        mean_follow_up_months=("time", "mean")
+    ).reset_index()
+else:
+    summary_table = pd.DataFrame()
+
+summary_table.to_excel(
+    f"{OUTPUT_DIR}/survival_summary_by_group.xlsx",
+    index=False
+)
+
+# ------------------------------------------------------------
+# 7. KAPLAN–MEIER + LOG-RANK FOR ALL VARIABLES
+# ------------------------------------------------------------
+
+km_results = []
+
+continuous_vars = [
+    "age",
+    "nucleus_area",
+    "nucleus_perimeter",
+    "nucleus_circularity",
+    "nucleus_eccentricity"
+]
+
+for var in continuous_vars:
+    if var in df.columns:
+        df[var] = pd.to_numeric(df[var], errors="coerce")
+
+        median_value = df[var].median()
+        grouped_var = var + "_grouped"
+
+        df[grouped_var] = np.where(
+            df[var] <= median_value,
+            f"Low {var}",
+            f"High {var}"
+        )
+
+        result = create_km_plot(
+            data=df,
+            variable=grouped_var,
+            output_dir=OUTPUT_DIR,
+            figsize=(8, 6),
+            min_cases_per_group=5
+        )
+
+        if result is not None:
+            result["Cut-off"] = f"Median = {median_value:.3f}"
+            km_results.append(result)
+
+categorical_vars = [
+    "group",
+    "diagnosis",
+    "sex",
+    "location"
+]
+
+for var in categorical_vars:
+    if var in df.columns:
+        if var in ["diagnosis", "location"]:
+            fig_size = (11, 7)
+            min_cases = 8
+        else:
+            fig_size = (8, 6)
+            min_cases = 5
+
+        result = create_km_plot(
+            data=df,
+            variable=var,
+            output_dir=OUTPUT_DIR,
+            figsize=fig_size,
+            min_cases_per_group=min_cases
+        )
+
+        if result is not None:
+            result["Cut-off"] = "Not applicable"
+            km_results.append(result)
+
+km_logrank_table = pd.DataFrame(km_results)
+
+if not km_logrank_table.empty:
+    km_logrank_table = km_logrank_table.sort_values("Log-rank p-value")
+
+km_logrank_table.to_excel(
+    f"{OUTPUT_DIR}/kaplan_meier_logrank_all_variables.xlsx",
+    index=False
+)
+
+# ------------------------------------------------------------
+# 8. UNIVARIABLE COX REGRESSION
+# ------------------------------------------------------------
+
+cox_df = df.copy()
+
+for var in continuous_vars:
+    if var in cox_df.columns:
+        cox_df[var] = pd.to_numeric(cox_df[var], errors="coerce")
+
+cox_candidate_vars = [
+    "age",
+    "sex",
+    "group",
+    "diagnosis",
+    "location",
+    "nucleus_area",
+    "nucleus_perimeter",
+    "nucleus_circularity",
+    "nucleus_eccentricity"
+]
+
+cox_candidate_vars = [v for v in cox_candidate_vars if v in cox_df.columns]
+
+univariable_results = []
+
+for variable in cox_candidate_vars:
+
+    temp = cox_df[["time", "event", variable]].dropna().copy()
+
+    if temp[variable].dtype == "object":
+        counts = temp[variable].value_counts()
+        valid_categories = counts[counts >= 5].index
+        temp = temp[temp[variable].isin(valid_categories)]
+
+        if temp[variable].nunique() < 2:
+            continue
+
+        temp_encoded = pd.get_dummies(
+            temp,
+            columns=[variable],
+            drop_first=True
+        )
+
+    else:
+        temp_encoded = temp.copy()
+
+    for col in temp_encoded.columns:
+        if col in ["time", "event"]:
+            continue
+
+        model_df = temp_encoded[["time", "event", col]].dropna()
+
+        if model_df[col].nunique() <= 1:
+            continue
+
+        cph = CoxPHFitter(penalizer=0.1)
+
+        try:
+            cph.fit(
+                model_df,
+                duration_col="time",
+                event_col="event"
+            )
+
+            summary = cph.summary.loc[col]
+
+            univariable_results.append({
+                "Original variable": variable,
+                "Variable": col,
+                "HR": np.exp(summary["coef"]),
+                "95% CI lower": np.exp(summary["coef lower 95%"]),
+                "95% CI upper": np.exp(summary["coef upper 95%"]),
+                "p-value": summary["p"]
+            })
+
+        except Exception:
+            continue
+
+univariable_cox_table = pd.DataFrame(univariable_results)
+
+if not univariable_cox_table.empty:
+    univariable_cox_table = univariable_cox_table.sort_values("p-value")
+
+univariable_cox_table.to_excel(
+    f"{OUTPUT_DIR}/univariable_cox_all_variables.xlsx",
+    index=False
+)
+
+# ------------------------------------------------------------
+# 9. MULTIVARIABLE COX REGRESSION
+# ------------------------------------------------------------
+
+selected_vars = []
+
+if not univariable_cox_table.empty:
+    selected_vars = univariable_cox_table.loc[
+        univariable_cox_table["p-value"] < 0.20,
+        "Variable"
+    ].tolist()
+
+for forced_var in ["age", "nucleus_area", "nucleus_perimeter"]:
+    if forced_var in cox_candidate_vars and forced_var not in selected_vars:
+        selected_vars.append(forced_var)
+
+selected_vars = selected_vars[:8]
+
+multi_vars = [
+    "time",
+    "event",
+    "age",
+    "sex",
+    "group",
+    "diagnosis",
+    "location",
+    "nucleus_area",
+    "nucleus_perimeter",
+    "nucleus_circularity",
+    "nucleus_eccentricity"
+]
+
+multi_vars = [v for v in multi_vars if v in cox_df.columns]
+
+multi_df = cox_df[multi_vars].copy()
+
+for var in continuous_vars:
+    if var in multi_df.columns:
+        multi_df[var] = pd.to_numeric(multi_df[var], errors="coerce")
+
+multi_df = multi_df.dropna()
+
+categorical_multi = [
+    v for v in ["sex", "group", "diagnosis", "location"]
+    if v in multi_df.columns
+]
+
+for var in categorical_multi:
+    counts = multi_df[var].value_counts()
+    rare_levels = counts[counts < 5].index
+    multi_df[var] = multi_df[var].replace(rare_levels, "Other")
+
+multi_df = pd.get_dummies(
+    multi_df,
+    columns=categorical_multi,
+    drop_first=True
+)
+
+available_vars = [
+    v for v in selected_vars
+    if v in multi_df.columns
+]
+
+for forced_var in ["age", "nucleus_area", "nucleus_perimeter"]:
+    if forced_var in multi_df.columns and forced_var not in available_vars:
+        available_vars.append(forced_var)
+
+available_vars = available_vars[:8]
+
+final_df = multi_df[["time", "event"] + available_vars].copy()
+
+for col in available_vars.copy():
+    if final_df[col].nunique() <= 1 or final_df[col].var() < 0.01:
+        final_df = final_df.drop(columns=[col])
+        available_vars.remove(col)
+
+if len(available_vars) > 1:
+    corr = final_df[available_vars].corr().abs()
+    upper = corr.where(np.triu(np.ones(corr.shape), k=1).astype(bool))
+
+    to_drop = [
+        col for col in upper.columns
+        if any(upper[col] > 0.85)
+    ]
+
+    final_df = final_df.drop(columns=to_drop)
+    available_vars = [v for v in available_vars if v not in to_drop]
+
+multivariable_table = pd.DataFrame()
+
+if len(available_vars) > 0:
+    cph_multi = CoxPHFitter(penalizer=0.5)
+
+    try:
+        cph_multi.fit(
+            final_df,
+            duration_col="time",
+            event_col="event"
+        )
+
+        multi_summary = cph_multi.summary.copy()
+
+        multivariable_table = pd.DataFrame({
+            "Variable": multi_summary.index,
+            "HR": np.exp(multi_summary["coef"]),
+            "95% CI lower": np.exp(multi_summary["coef lower 95%"]),
+            "95% CI upper": np.exp(multi_summary["coef upper 95%"]),
+            "p-value": multi_summary["p"]
+        })
+
+        try:
+            cph_multi.check_assumptions(
+                final_df,
+                p_value_threshold=0.05,
+                show_plots=False
+            )
+        except Exception:
+            pass
+
+    except ConvergenceError:
+        print("Multivariable Cox did not converge. Try increasing penalizer.")
+
+multivariable_table.to_excel(
+    f"{OUTPUT_DIR}/multivariable_cox_final.xlsx",
+    index=False
+)
+
+# ------------------------------------------------------------
+# 10. FOREST PLOT
+# ------------------------------------------------------------
+
+if not multivariable_table.empty:
+
+    forest_df = multivariable_table.copy()
+    forest_df = forest_df.sort_values("HR")
+
+    plt.figure(figsize=(8, max(5, len(forest_df) * 0.5)))
+
+    plt.errorbar(
+        forest_df["HR"],
+        forest_df["Variable"],
+        xerr=[
+            forest_df["HR"] - forest_df["95% CI lower"],
+            forest_df["95% CI upper"] - forest_df["HR"]
+        ],
+        fmt="o",
+        capsize=4,
+        linewidth=1.8
+    )
+
+    plt.axvline(x=1, linestyle="--", linewidth=1)
+    plt.xlabel("Hazard ratio (95% CI)", fontsize=12)
+    plt.ylabel("")
+    plt.title("Multivariable Cox regression", fontsize=14)
+    plt.tick_params(axis="both", labelsize=10)
+    plt.tight_layout()
+
+    plt.savefig(
+        f"{OUTPUT_DIR}/multivariable_cox_forest_plot.png",
+        dpi=600,
+        bbox_inches="tight"
+    )
+
+    plt.savefig(
+        f"{OUTPUT_DIR}/multivariable_cox_forest_plot.pdf",
+        bbox_inches="tight"
+    )
+
+    plt.close()
+
+# ------------------------------------------------------------
+# 11. CONSOLIDATED SURVIVAL TABLE
+# ------------------------------------------------------------
+
+if not km_logrank_table.empty:
+
+    km_consolidated = km_logrank_table.copy()
+
+    km_consolidated["Clean variable"] = (
+        km_consolidated["Variable"]
+        .str.replace("_grouped", "", regex=False)
+        .str.replace("_", " ", regex=False)
+    )
+
+    km_consolidated = km_consolidated.rename(columns={
+        "Clean variable": "Variable clean",
+        "Number of groups": "Groups",
+        "N": "N",
+        "Events": "Events",
+        "Cut-off": "Cut-off / Categories",
+        "Log-rank p-value": "Log-rank p-value"
+    })
+
+    km_consolidated = km_consolidated[[
+        "Variable clean",
+        "Groups",
+        "N",
+        "Events",
+        "Cut-off / Categories",
+        "Log-rank p-value"
+    ]]
+
+    km_consolidated = km_consolidated.rename(columns={
+        "Variable clean": "Variable"
+    })
+
+else:
+    km_consolidated = pd.DataFrame(columns=[
+        "Variable",
+        "Groups",
+        "N",
+        "Events",
+        "Cut-off / Categories",
+        "Log-rank p-value"
+    ])
+
+if not univariable_cox_table.empty:
+
+    uni = univariable_cox_table.copy()
+
+    uni["Variable clean"] = (
+        uni["Original variable"]
+        .astype(str)
+        .str.replace("_", " ", regex=False)
+    )
+
+    uni["Univariable HR (95% CI)"] = uni.apply(
+        lambda row: format_hr_ci(
+            row["HR"],
+            row["95% CI lower"],
+            row["95% CI upper"]
+        ),
+        axis=1
+    )
+
+    uni["Univariable p-value"] = uni["p-value"]
+
+    uni_best = (
+        uni.sort_values("p-value")
+        .groupby("Variable clean", as_index=False)
+        .first()
+    )
+
+    uni_best = uni_best[[
+        "Variable clean",
+        "Univariable HR (95% CI)",
+        "Univariable p-value"
+    ]]
+
+    uni_best = uni_best.rename(columns={
+        "Variable clean": "Variable"
+    })
+
+else:
+    uni_best = pd.DataFrame(columns=[
+        "Variable",
+        "Univariable HR (95% CI)",
+        "Univariable p-value"
+    ])
+
+if not multivariable_table.empty:
+
+    multi = multivariable_table.copy()
+
+    multi["Variable"] = (
+        multi["Variable"]
+        .astype(str)
+        .str.replace("_", " ", regex=False)
+    )
+
+    multi["Multivariable HR (95% CI)"] = multi.apply(
+        lambda row: format_hr_ci(
+            row["HR"],
+            row["95% CI lower"],
+            row["95% CI upper"]
+        ),
+        axis=1
+    )
+
+    multi["Multivariable p-value"] = multi["p-value"]
+
+    multi_clean = multi[[
+        "Variable",
+        "Multivariable HR (95% CI)",
+        "Multivariable p-value"
+    ]]
+
+else:
+    multi_clean = pd.DataFrame(columns=[
+        "Variable",
+        "Multivariable HR (95% CI)",
+        "Multivariable p-value"
+    ])
+
+survival_consolidated = km_consolidated.merge(
+    uni_best,
+    on="Variable",
+    how="left"
+)
+
+survival_consolidated = survival_consolidated.merge(
+    multi_clean,
+    on="Variable",
+    how="left"
+)
+
+survival_consolidated["Log-rank p-value"] = survival_consolidated[
+    "Log-rank p-value"
+].apply(format_p_value)
+
+survival_consolidated["Univariable p-value"] = survival_consolidated[
+    "Univariable p-value"
+].apply(format_p_value)
+
+survival_consolidated["Multivariable p-value"] = survival_consolidated[
+    "Multivariable p-value"
+].apply(format_p_value)
+
+survival_consolidated = survival_consolidated.fillna("—")
+
+survival_consolidated = survival_consolidated[[
+    "Variable",
+    "Groups",
+    "N",
+    "Events",
+    "Cut-off / Categories",
+    "Log-rank p-value",
+    "Univariable HR (95% CI)",
+    "Univariable p-value",
+    "Multivariable HR (95% CI)",
+    "Multivariable p-value"
+]]
+
+survival_consolidated.to_excel(
+    f"{OUTPUT_DIR}/Table_survival_consolidated.xlsx",
+    index=False
+)
+
+survival_consolidated.to_csv(
+    f"{OUTPUT_DIR}/Table_survival_consolidated.csv",
+    index=False
+)
+
+# ------------------------------------------------------------
+# 12. SAVE ALL RESULTS TO ONE EXCEL FILE
+# ------------------------------------------------------------
+
+with pd.ExcelWriter(f"{OUTPUT_DIR}/survival_analysis_all_results.xlsx") as writer:
+    summary_table.to_excel(writer, sheet_name="Summary", index=False)
+    km_logrank_table.to_excel(writer, sheet_name="KM log-rank", index=False)
+    univariable_cox_table.to_excel(writer, sheet_name="Univariable Cox", index=False)
+    multivariable_table.to_excel(writer, sheet_name="Multivariable Cox", index=False)
+    survival_consolidated.to_excel(writer, sheet_name="Consolidated Table", index=False)
+
+print("\nSRBCN survival analysis completed.")
+print(f"All results saved in: {OUTPUT_DIR}")
+
+print("\nFinal consolidated survival table:")
+print(survival_consolidated)
+```
