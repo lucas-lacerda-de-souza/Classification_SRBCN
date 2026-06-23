@@ -4,13 +4,9 @@ This repository contains examples of the expected data organisation required to 
 The framework integrates histopathological image analysis, quantitative nuclear morphometry, clinicopathological variables, foundation model embeddings, multimodal deep learning architectures, and survival modelling.
 Due to ethical restrictions, institutional review board regulations, and patient privacy requirements, complete whole-slide images (WSIs), raw clinicopathological datasets, and patient-identifiable information are not publicly available. Therefore, only representative examples, synthetic data, and directory structures are provided to demonstrate the computational workflow.
 
----
-
-# 🧩 1. Example Whole-Slide Image and Patch Structure
-
+🧩 1. Example Whole-Slide Image and Patch Structure
 The following structure illustrates the organisation of image patches generated from annotated regions of interest (ROIs) extracted from H&E whole-slide images.
 
-```text
 DATA/
 │
 ├── patches/
@@ -34,8 +30,6 @@ DATA/
 │       └── Melanocytic/
 │
 └──
-```
-
 Image characteristics:
 
 * H&E-stained whole-slide images
@@ -45,49 +39,10 @@ Image characteristics:
 * Macenko colour normalisation
 * Rotational data augmentation
 
----
-
-# 🧩 2. CellViT++ Nuclear Segmentation Structure
-
-The following directory structure is used for CellViT++ nuclear segmentation and feature extraction.
-
-```text
-DATA/
-│
-├── nuclei_segmentation/
-│   │
-│   ├── images/
-│   │   ├── train/
-│   │   ├── val/
-│   │   └── test/
-│   │
-│   ├── masks/
-│   │   ├── train/
-│   │   ├── val/
-│   │   └── test/
-│   │
-│   └── embeddings/
-│       ├── train/
-│       ├── val/
-│       └── test/
-│
-└──
-```
-
-Outputs include:
-
-* Nuclear segmentation masks
-* Cell embeddings
-* Morphometric descriptors
-* Cell-level representations
-
----
-
-# 🧩 3. Data Organisation for Multimodal Models
+🧩 2. Data Organisation for Multimodal Models
 
 The multimodal framework combines histopathological image features, morphometric variables, and clinicopathological information.
 
-```text
 DATA/
 │
 ├── train/
@@ -112,18 +67,8 @@ DATA/
 │   ├── clinical_data_train.xlsx
 │   ├── clinical_data_val.xlsx
 │   └── clinical_data_test.xlsx
-│
-├── morphometric_data/
-│   ├── morphometric_train.xlsx
-│   ├── morphometric_val.xlsx
-│   └── morphometric_test.xlsx
-│
-└── foundation_embeddings/
-    ├── UNI/
-    └── Virchow/
-```
-
-## Diagnostic Categories
+└── 
+Diagnostic Categories
 
 | Class Index | Tumour Group                             |
 | ----------- | ---------------------------------------- |
@@ -132,67 +77,13 @@ DATA/
 | 2           | Neuroectodermal and Neural Crest-Derived |
 | 3           | Melanocytic                              |
 
----
-
-# 🧩 4. Foundation Model Embeddings
-
-Feature embeddings extracted from pathology foundation models are stored separately.
-
-```text
-MODELS/
-│
-├── Foundation_Models/
-│   │
-│   ├── UNI/
-│   │   ├── train_embeddings.pkl
-│   │   ├── val_embeddings.pkl
-│   │   └── test_embeddings.pkl
-│   │
-│   └── Virchow/
-│       ├── train_embeddings.pkl
-│       ├── val_embeddings.pkl
-│       └── test_embeddings.pkl
-│
-└──
-```
-
-These embeddings are subsequently integrated into multimodal classification and survival prediction pipelines.
-
----
-
-# 🧩 5. Survival Modelling Data Structure
-
-```text
-DATA/
-│
-├── survival/
-│   │
-│   ├── survival_train.xlsx
-│   ├── survival_val.xlsx
-│   └── survival_test.xlsx
-│
-└──
-```
-
-Variables include:
-
-* Survival time
-* Event status
-* Clinicopathological features
-* Nuclear morphometric features
-* Image-derived embeddings
-* Foundation model features
-
----
-
-# 🧩 6. Supplementary Data
+🧩 3. Supplementary Data
 
 These files provide supporting datasets, metadata, model specifications, and reporting checklists used throughout the study.
 
-```text
 supplementary_data/
 │
-├── supplementary_table_1.xlsx
+├── supplement_1.xlsx
 ├── supplementary_table_2.xlsx
 ├── supplementary_table_3.xlsx
 ├── supplementary_table_4.xlsx
@@ -203,49 +94,21 @@ supplementary_data/
 ├── supplementary_table_9.xlsx
 ├── supplementary_table_10.xlsx
 └── supplementary_table_11.xlsx
-```
 
-## Supplementary Tables
+Supplements
 
-**Supplementary Table 1**
-Distribution of cases across participating institutions.
+Supplement 1: Confusion matrix and ROC curve of the analysed models in the internal evaluation.
+Supplement 2: Confusion matrix and ROC curve of the analysed models in the external evaluation. 
+Supplementary Table 1: Number and distribution of cases retrieved from each participating centre. 
+Supplementary Table 2: Immunohistochemical and molecular profile of head and neck small, round and blue cell neoplasms.
+Supplementary Table 3: TRIPOD-AI checklist.
+Supplementary Table 4: STARD-AI checklist. 
+Supplementary Table 5: Description of the dataset of this study.
+Supplementary Table 6. Distribution of cases across the training, validation, test, and external validation cohorts according to biological tumour group. The dataset comprised 675 cases categorised as haematolymphoid (n = 463), neuroectodermal and neural crest-derived (n = 84), mesenchymal (n = 75), and melanocytic (n = 53) neoplasms. Cases were allocated to the training (70%), validation (10%), test (10%), and external validation (10%) cohorts whilst maintaining class balance. 
 
-**Supplementary Table 2**
-WHO-based diagnostic classification of included tumour entities.
 
-**Supplementary Table 3**
-TRIPOD-AI checklist.
-
-**Supplementary Table 4**
-STARD-AI checklist.
-
-**Supplementary Table 5**
-Regions of interest used for morphometric analysis.
-
-**Supplementary Table 6**
-Training, validation, external validation, and test cohort distribution.
-
-**Supplementary Table 7**
-CellViT++ architecture and extracted nuclear features.
-
-**Supplementary Table 8**
-Clinicopathological and morphometric dataset.
-
-**Supplementary Table 9**
-Foundation model feature extraction pipeline.
-
-**Supplementary Table 10**
-Survival modelling variables.
-
-**Supplementary Table 11**
-Literature review and comparison with previous studies.
-
----
-
-# 🔒 Data Availability
+🔒 Data Availability
 
 Due to ethical restrictions, institutional review board regulations, and patient privacy requirements, complete whole-slide images (WSIs), raw clinicopathological data, survival information, and patient-identifiable material cannot be publicly released.
-
 Only representative examples, synthetic datasets, pretrained model configurations, and directory structures are provided to facilitate reproducibility of the computational pathology workflow.
-
 Researchers interested in accessing the original data may contact the corresponding authors and obtain appropriate ethical approvals and data-sharing agreements from participating institutions.
