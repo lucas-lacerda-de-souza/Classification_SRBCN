@@ -3,41 +3,6 @@ Advancing the Diagnosis of Head and Neck Small Round Blue Cell Neoplasms through
 ----------------------------------------------------------------------------------
 Author: Lucas Lacerda de Souza
 
-Description:
-    This script implements a multimodal artificial intelligence framework for the classification and prognostic 
-    stratification of head and neck small round blue cell neoplasms (SRBCNs).
-
-    The pipeline integrates histopathological image analysis, quantitative nuclear morphometric features, 
-    clinicopathological variables, CellViT++ cellular representations, and foundation model embeddings derived 
-    from UNI and Virchow.
-
-    The framework supports:
-        - XGBoost multiclass classification
-        - SHAP explainability analysis
-        - CellViT++ nuclear segmentation and cellular representation
-        - Multimodal deep learning classification
-        - Foundation model-based classification
-        - Survival analysis
-        - XGBoost survival prediction
-
-    Model performance is evaluated using:
-        - Accuracy
-        - Balanced accuracy
-        - Precision
-        - Recall
-        - F1-score
-        - ROC AUC analysis
-        - Confusion matrices
-        - Cohen's kappa
-        - Matthews correlation coefficient
-        - Calibration metrics
-        - Bootstrap confidence intervals
-        - Sensitivity and specificity analysis
-        - Harrell's C-index for survival prediction
-
-    The pipeline follows patient-level and centre-aware dataset separation to
-    minimise data leakage and support robust multicentre validation.
-
 Dependencies:
     torch>=2.8.0
     torchvision>=0.23.0
