@@ -93,14 +93,15 @@ All experiments were performed using the following configuration:
 **Installation**
 
 ```bash
-git clone https://github.com/lucas-lacerda-de-souza/Classification_SRB.git
-cd Classification_SRB
+git clone https://github.com/lucas-lacerda-de-souza/Classification_SRBCN.git
+cd Classification_SRBCN
 ```
 
 **Create Environment**
 ```bash
 conda env create -f environment.yml
-conda activate Classification_SRB
+conda activate Classification_SRBCN
+
 ```
 
 ---
