@@ -1,0 +1,355 @@
+🧠 Model Card — Multimodal Artificial Intelligence for Head and Neck Small Round Blue Cell Neoplasms
+
+1. Model Overview
+
+This repository provides a multimodal artificial intelligence framework developed to support the diagnosis and prognostic stratification of head and neck small round blue cell neoplasms (SRBCNs).
+
+The model was designed for four tumour groups:
+
+| Class | Tumour Group                           |
+| ----- | -------------------------------------- |
+| 0     | Haematolymphoid                        |
+| 1     | Mesenchymal                            |
+| 2     | Neuroectodermal / Neural Crest-Derived |
+| 3     | Melanocytic                            |
+
+The computational framework integrates:
+
+* Clinicopathological variables
+* Nuclear morphometric descriptors
+* H&E histopathological image patches
+* Conventional machine learning using XGBoost
+* SHAP-based explainability
+* Multimodal convolutional neural networks
+* CellViT++ cellular representation learning
+* Foundation model pipelines using UNI and Virchow
+* Conventional and machine learning-based survival analysis
+
+The model is intended as a research-oriented decision-support framework for computational pathology.
+
+This model is not intended for autonomous clinical diagnosis.
+
+2. Study Design and Data
+
+This study was designed as a multicentre retrospective investigation using anonymised histopathological and clinicopathological data.
+
+A total of 675 cases were included:
+
+| Tumour Group                           | Number of Cases | Percentage |
+| -------------------------------------- | --------------- | ---------- |
+| Haematolymphoid                        | 463             | 68.6%      |
+| Neuroectodermal / Neural Crest-Derived | 84              | 12.4%      |
+| Mesenchymal                            | 75              | 11.1%      |
+| Melanocytic                            | 53              | 7.9%       |
+
+The cohort included 362 male patients and 313 female patients. The mean age at diagnosis was 41.8 ± 27.8 years.
+
+At the last follow-up, 435 patients were alive and 240 had died.
+
+3. Input Data
+
+The framework supports the following input modalities:
+
+* H&E-stained whole-slide images
+* Image patches extracted from annotated regions of interest
+* Clinicopathological variables
+* Nuclear morphometric features
+* Survival data
+* Foundation model embeddings
+
+Core structured variables include:
+
+* Age
+* Sex
+* Anatomical location
+* Tumour group
+* Diagnosis
+* Nuclear area
+* Nuclear perimeter
+* Nuclear circularity
+* Nuclear eccentricity
+* Survival time
+* Vital status
+
+4. Model Components
+
+4.1 XGBoost Multiclass Classifier
+
+The XGBoost model was trained using clinicopathological and nuclear morphometric features for four-class tumour classification.
+
+Performance:
+
+| Metric            | Value  |
+| ----------------- | ------ |
+| Accuracy          | 0.980  |
+| Balanced Accuracy | 0.976  |
+| Macro Precision   | 0.967  |
+| Macro Recall      | 0.976  |
+| Macro F1-score    | 0.971  |
+| Weighted F1-score | 0.980  |
+| Macro AUC         | 0.9996 |
+| Cohen’s Kappa     | 0.961  |
+| MCC               | 0.961  |
+
+Class-specific AUC:
+
+| Tumour Group                           | AUC   |
+| -------------------------------------- | ----- |
+| Haematolymphoid                        | 1.000 |
+| Melanocytic                            | 1.000 |
+| Neuroectodermal / Neural Crest-Derived | 1.000 |
+| Mesenchymal                            | 0.999 |
+
+5. Nuclear Morphometric Analysis
+
+Significant differences were observed across tumour groups for nuclear morphometric variables.
+
+| Tumour Group                           | Nuclear Area | Perimeter | Circularity | Eccentricity |
+| -------------------------------------- | ------------ | --------- | ----------- | ------------ |
+| Haematolymphoid                        | 19.30        | 19.31     | 0.767       | 0.728        |
+| Mesenchymal                            | 17.81        | 17.61     | 0.783       | 0.770        |
+| Neuroectodermal / Neural Crest-Derived | 30.40        | 30.06     | 0.733       | 0.751        |
+| Melanocytic                            | 23.73        | 23.36     | 0.745       | 0.795        |
+
+Neuroectodermal/neural crest-derived tumours showed the largest nuclei, while melanocytic tumours demonstrated the highest eccentricity.
+
+6. Multimodal CNN Models
+
+The multimodal CNN framework combined histopathological image features with clinicopathological and morphometric variables.
+
+| Model       | Accuracy | AUROC |
+| ----------- | -------- | ----- |
+| AlexNet     | 69.8%    | 0.792 |
+| MobileNet   | 75.1%    | 0.847 |
+| InceptionV3 | 77.9%    | 0.881 |
+| DenseNet121 | 82.7%    | 0.914 |
+| Xception    | 81.3%    | 0.926 |
+| ResNet50    | 86.9%    | 0.951 |
+
+ResNet50 was the best-performing conventional CNN-based multimodal model.
+
+7. CellViT++ Framework
+
+CellViT++ was used for cellular representation learning and multimodal classification.
+
+Internal test performance:
+
+| Metric        | Value |
+| ------------- | ----- |
+| Accuracy      | 91.2% |
+| Precision     | 90.7% |
+| Recall        | 89.5% |
+| F1-score      | 89.9% |
+| Specificity   | 97.4% |
+| AUROC         | 0.973 |
+| Cohen’s Kappa | 0.874 |
+
+External validation performance:
+
+| Metric        | Value |
+| ------------- | ----- |
+| Accuracy      | 88.3% |
+| Precision     | 88.0% |
+| Recall        | 86.8% |
+| F1-score      | 87.3% |
+| AUROC         | 0.958 |
+| Cohen’s Kappa | 0.842 |
+
+8. Foundation Models
+
+The repository includes foundation model pipelines using UNI and Virchow.
+
+Internal test cohort:
+
+| Model   | Accuracy | F1-score | AUROC |
+| ------- | -------- | -------- | ----- |
+| UNI     | 88.7%    | 87.7%    | 0.958 |
+| Virchow | 92.4%    | 91.7%    | 0.981 |
+
+External validation cohort:
+
+| Model   | Accuracy | F1-score | AUROC |
+| ------- | -------- | -------- | ----- |
+| UNI     | 84.3%    | 83.8%    | 0.944 |
+| Virchow | 89.8%    | 89.3%    | 0.972 |
+
+Virchow demonstrated the strongest performance and generalisability across internal and external cohorts.
+
+9. Calibration
+
+Calibration improved with increasing model complexity.
+
+| Model     | ECE   | Brier Score |
+| --------- | ----- | ----------- |
+| AlexNet   | 0.093 | 0.214       |
+| ResNet50  | 0.036 | 0.104       |
+| CellViT++ | 0.024 | 0.082       |
+
+CellViT++ produced the most reliable probability estimates among the evaluated multimodal architectures.
+
+10. Explainability
+
+SHAP analysis was used to interpret the XGBoost classifier and survival model.
+
+The most influential diagnostic features were:
+
+* Age
+* Nuclear perimeter
+* Nuclear eccentricity
+* Nuclear area
+
+Age was the dominant predictor for haematolymphoid, mesenchymal, and neuroectodermal/neural crest-derived tumours.
+
+Nuclear perimeter was the dominant predictor for melanocytic tumours.
+
+Sex and most anatomical location variables showed minimal influence on model output.
+
+11. Survival Analysis
+
+Conventional survival analysis included:
+
+* Kaplan–Meier analysis
+* Log-rank testing
+* Univariable Cox regression
+* Multivariable Cox regression
+
+Kaplan–Meier analysis demonstrated significant differences in overall survival according to:
+
+* Tumour group
+* Diagnosis
+* Anatomical location
+* Nuclear area
+* Nuclear perimeter
+* Nuclear circularity
+* Nuclear eccentricity
+
+No significant survival differences were observed according to age or sex.
+
+In multivariable Cox regression, nuclear area remained independently associated with overall survival:
+
+| Variable     | HR   | 95% CI    | p-value |
+| ------------ | ---- | --------- | ------- |
+| Nuclear area | 1.02 | 1.00–1.03 | 0.012   |
+
+12. XGBoost Survival Model
+
+The XGBoost survival model was developed using a Cox proportional hazards objective.
+
+Performance:
+
+| Cohort     | C-index |
+| ---------- | ------- |
+| Training   | 0.976   |
+| Validation | 0.788   |
+| Test       | 0.768   |
+
+In the independent test cohort, median risk-score stratification identified:
+
+| Risk Group | Patients | Events |
+| ---------- | -------- | ------ |
+| High-risk  | 68       | 42     |
+| Low-risk   | 67       | 6      |
+
+Kaplan–Meier analysis demonstrated significant separation between predicted risk groups:
+
+Log-rank p < 0.001
+
+The most influential survival predictors identified by SHAP were:
+
+* Age
+* Reactive follicular hyperplasia
+* Nuclear area
+* Nuclear perimeter
+* Diffuse large B-cell lymphoma
+
+13. Intended Use
+
+This model is intended for:
+
+* Computational pathology research
+* Evaluation of multimodal AI approaches
+* SRBCN classification research
+* Nuclear morphometric analysis
+* Foundation model benchmarking
+* Survival prediction research
+* Development of diagnostic and prognostic decision-support systems
+
+This model is not intended for:
+
+* Autonomous clinical diagnosis
+* Replacement of expert pathologist review
+* Direct clinical deployment without further validation
+* Use on unvalidated populations, institutions, scanners, or staining protocols
+
+14. Limitations
+
+Key limitations include:
+
+* Retrospective study design
+* Multicentre variability in staining and scanning
+* Potential institutional bias
+* Uneven tumour group distribution
+* No public release of raw whole-slide images
+* Dependence on tissue quality and ROI selection
+* Need for further validation in larger independent cohorts
+* Model outputs require expert pathological interpretation
+
+15. Potential Biases
+
+Potential sources of bias include:
+
+* Institutional differences in tissue processing
+* Scanner-specific image characteristics
+* Staining variability
+* Geographic variation in case distribution
+* Uneven class prevalence
+* Retrospective archival case selection
+* ROI-based sampling bias
+
+Centre-aware splitting and external validation were used to reduce data leakage and assess generalisability.
+
+16. Ethical and Responsible AI Considerations
+
+All data were anonymised and used under institutional ethical approvals and data-sharing agreements.
+
+Due to patient privacy and institutional restrictions:
+
+* Whole-slide images are not publicly distributed
+* Raw clinicopathological data are not publicly shared
+* Patient-identifiable metadata are not included in this repository
+
+The framework is intended for research and decision-support development only.
+
+Predictions must always be interpreted by qualified pathologists in conjunction with morphology, immunohistochemistry, molecular findings, and clinical context.
+
+17. Model Availability
+
+This repository provides:
+
+* Model architecture code
+* Training scripts
+* Inference scripts
+* Evaluation utilities
+* Data organisation examples
+* Synthetic examples
+* Documentation for reproducibility
+
+This repository does not provide:
+
+* Patient-identifiable data
+* Raw whole-slide images
+* Private clinical datasets
+* Protected health information
+* Institutional diagnostic records
+
+18. Citation
+
+If you use this repository, please cite the associated manuscript:
+
+de Souza LL et al. Advancing the Diagnosis of Head and Neck Small Round Blue Cell Neoplasms Through Artificial Intelligence. 2026.
+
+Please also acknowledge the original publications and licences for UNI, Virchow, CellViT++, XGBoost, SHAP, PyTorch, and other third-party frameworks used in this repository.
+
+19. Licence
+
+MIT License © 2026 Lucas Lacerda de Souza
