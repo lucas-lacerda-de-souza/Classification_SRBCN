@@ -1,8 +1,8 @@
 # 🧠 ADVANCING THE DIAGNOSIS OF HEAD AND NECK SMALL ROUND BLUE CELL NEOPLASMS THROUGH ARTIFICIAL INTELLIGENCE
 
-# Author: Lucas Lacerda de Souza
+**Author:** Lucas Lacerda de Souza
 
-# Year: 2026
+**Year:** 2026
 
 ---
 
