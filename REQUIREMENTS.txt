@@ -1,0 +1,238 @@
+⚙️ System Requirements
+
+Operating System
+
+The computational framework was developed and validated using:
+
+* Ubuntu 20.04.1 LTS (64-bit)
+
+The operating system configuration is fully compatible with:
+
+* CUDA-enabled GPU acceleration
+* Foundation model inference (UNI and Virchow)
+* CellViT++ cellular representation learning
+* Multimodal deep learning pipelines
+* XGBoost classification and survival modelling
+* Multi-GPU distributed training
+* Whole-slide image (WSI) processing
+* Large-scale computational pathology workflows
+
+🐍 Programming Environment
+
+Programming Language
+
+Python 3.12.11
+
+📚 Frameworks and Libraries
+
+Deep Learning Frameworks
+
+| Package     | Version |
+| ----------- | ------- |
+| PyTorch     | 2.8.0   |
+| TorchVision | 0.23.0  |
+| TorchAudio  | 2.8.0   |
+| CUDA        | 12.8    |
+| timm        | 1.0.15  |
+
+These libraries were used for:
+
+* UNI foundation model inference
+* Virchow foundation model inference
+* CellViT++ cellular representation learning
+* Multimodal deep learning
+* Convolutional neural networks
+* Multi-GPU training
+* Mixed precision optimisation
+
+Machine Learning and Survival Analysis
+
+| Package      | Version |
+| ------------ | ------- |
+| XGBoost      | 3.0.0   |
+| SHAP         | 0.48.0  |
+| Scikit-learn | 1.7.0   |
+| Lifelines    | 0.30.0  |
+
+These libraries were used for:
+
+* Multiclass classification
+* Survival prediction
+* Kaplan–Meier analysis
+* Cox proportional hazards modelling
+* Explainable artificial intelligence
+* Model calibration
+* Statistical evaluation
+
+Data Processing and Analysis
+
+| Package  | Version |
+| -------- | ------- |
+| NumPy    | 1.26.4  |
+| Pandas   | 2.2.3   |
+| OpenPyXL | 3.1.5   |
+
+These packages were used for:
+
+* Numerical operations
+* Nuclear morphometric analysis
+* Clinicopathological metadata processing
+* Survival dataset integration
+* Excel-based data handling
+
+Visualisation Libraries
+
+| Package    | Version |
+| ---------- | ------- |
+| Matplotlib | 3.10.0  |
+| Seaborn    | 0.13.2  |
+
+Used for:
+
+* ROC curve generation
+* Kaplan–Meier curves
+* SHAP visualisation
+* Calibration plots
+* Confusion matrices
+* Statistical graphics
+* Survival risk stratification plots
+
+Histopathological Image Processing
+
+| Package          | Version |
+| ---------------- | ------- |
+| OpenSlide-Python | 1.4.0   |
+| Pillow           | 11.0.0  |
+
+Used for:
+
+* Whole-slide image processing
+* Patch extraction
+* Histopathological image loading
+* RGB preprocessing
+* Foundation model inference pipelines
+
+Utilities
+
+| Package | Version |
+| ------- | ------- |
+| tqdm    | 4.67.0  |
+
+Used for:
+
+* Progress monitoring
+* WSI processing tracking
+* Feature extraction monitoring
+* Training and inference progress reporting
+
+🧠 Explainability and Model Interpretation
+
+The framework integrates explainability methods for both image-based and structured data analysis.
+
+SHAP Analysis
+
+SHAP (SHapley Additive Explanations) was used to evaluate the contribution of:
+
+* Clinicopathological variables
+* Nuclear morphometric descriptors
+* Multimodal features
+* Survival predictors
+
+The explainability pipeline supports:
+
+* Global feature importance
+* Local prediction explanations
+* Survival model interpretation
+* Feature interaction analysis
+
+Attention-Based Interpretability
+
+Attention mechanisms implemented within:
+
+* UNI
+* Virchow
+* CellViT++
+* Multiple Instance Learning (MIL)
+
+were used to identify diagnostically relevant histopathological regions.
+
+The interpretability pipeline supports:
+
+* Attention heatmaps
+* Feature attribution analysis
+* Morphological pattern exploration
+* Spatial tumour visualisation
+
+🧬 Foundation Models
+
+The framework includes support for:
+
+* UNI (Mahmood Lab)
+* Virchow (Paige AI)
+* CellViT++
+
+These models were used as feature extractors and cellular representation learners without modification of their original architectures.
+
+💻 Hardware Configuration
+
+All experiments were performed using:
+
+| Component  | Specification                             |
+| ---------- | ----------------------------------------- |
+| CPU        | Intel Xeon W-2295 (18 cores / 36 threads) |
+| RAM        | 125 GB                                    |
+| GPU        | 3 × NVIDIA GeForce RTX 3090               |
+| GPU Memory | 24 GB per GPU                             |
+
+This configuration supports:
+
+* Large-scale WSI processing
+* Foundation model inference
+* Multimodal deep learning
+* CellViT++ analysis
+* XGBoost optimisation
+* Survival modelling
+
+🧬 Conda Environment and Channels
+
+The project was developed using conda.
+
+Required channels:
+
+conda config --add channels pytorch
+conda config --add channels nvidia
+conda config --add channels defaults
+
+Example environment creation:
+
+conda create -n srbcn-ai python=3.12.11
+conda activate srbcn-ai
+
+pip install torch torchvision torchaudio
+pip install timm
+pip install xgboost
+pip install shap
+pip install lifelines
+pip install pandas numpy matplotlib seaborn
+pip install openslide-python pillow
+pip install scikit-learn
+pip install tqdm openpyxl
+
+📦 Requirements File
+
+torch==2.8.0
+torchvision==0.23.0
+torchaudio==2.8.0
+numpy==1.26.4
+pandas==2.2.3
+scikit-learn==1.7.0
+matplotlib==3.10.0
+seaborn==0.13.2
+pillow==11.0.0
+tqdm==4.67.0
+openpyxl==3.1.5
+timm==1.0.15
+xgboost==3.0.0
+shap==0.48.0
+lifelines==0.30.0
+openslide-python==1.4.0
