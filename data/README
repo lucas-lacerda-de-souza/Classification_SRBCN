@@ -1,9 +1,7 @@
-#🧩 Directory Overview
+🧩 Directory Overview
 
 This repository contains examples of the expected data organisation required to reproduce the multimodal artificial intelligence framework developed for the classification and prognostic stratification of head and neck small round blue cell neoplasms (SRBCNs).
-
 The framework integrates histopathological image analysis, quantitative nuclear morphometry, clinicopathological variables, foundation model embeddings, multimodal deep learning architectures, and survival modelling.
-
 Due to ethical restrictions, institutional review board regulations, and patient privacy requirements, complete whole-slide images (WSIs), raw clinicopathological datasets, and patient-identifiable information are not publicly available. Therefore, only representative examples, synthetic data, and directory structures are provided to demonstrate the computational workflow.
 
 ---
