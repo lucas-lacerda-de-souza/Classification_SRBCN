@@ -1,0 +1,92 @@
+🧠 Models
+
+This directory contains the artificial intelligence frameworks developed for the diagnosis and prognostic stratification of head and neck small round blue cell neoplasms (SRBCNs).
+
+The repository includes:
+* XGBoost multiclass classification and SHAP explainability analysis
+* CellViT++ nuclear segmentation and cellular representation
+* Multimodal deep learning architectures
+* Foundation model pipelines (UNI and Virchow)
+* Survival analysis
+* XGBoost survival prediction
+
+The framework integrates clinicopathological variables, nuclear morphometric features, histopathological image representations, and foundation model embeddings within a unified computational pathology pipeline.
+
+📊 XGBoost Multiclass Classification and SHAP
+Classification of tumour groups using clinicopathological and nuclear morphometric variables.
+
+Input features
+* Age
+* Sex
+* Anatomical location
+* Nuclear area
+* Nuclear perimeter
+* Nuclear circularity
+* Nuclear eccentricity
+
+Output
+* Multiclass classification
+* SHAP feature importance
+* ROC curves
+* Confusion matrices
+
+🔬 CellViT++ Nuclear Segmentation and Cellular Representation
+Transformer-based nuclear segmentation and cellular feature extraction.
+
+Outputs
+* Nuclear masks
+* Cell embeddings
+* Morphometric descriptors
+
+Extracted features
+* Nuclear area
+* Nuclear perimeter
+* Nuclear circularity
+* Nuclear eccentricity
+
+🧬 Multimodal Deep Learning Architectures
+
+Integration of image features, morphometric descriptors, and clinicopathological variables.
+
+CNN backbones
+* AlexNet
+* MobileNet
+* InceptionV3
+* DenseNet121
+* Xception
+* ResNet50
+
+🚀 Foundation Models (UNI and Virchow)
+
+Vision transformer-based pathology foundation models used for histopathological representation learning.
+
+Outputs
+* Feature embeddings
+* Classification probabilities
+* Patient-level predictions
+
+Best-performing model
+* Virchow
+  * Internal AUROC: 0.981
+  * External AUROC: 0.972
+
+⏳ Survival Analysis
+
+Conventional survival analysis using:
+* Kaplan–Meier curves
+* Log-rank tests
+* Cox proportional hazards models
+
+🤖 XGBoost Survival Prediction
+
+Machine learning-based survival modelling using the Cox objective function.
+
+Outputs
+* Risk scores
+* Survival predictions
+* SHAP survival interpretation
+
+Performance
+* Training C-index: 0.976
+* Validation C-index: 0.788
+* Test C-index: 0.768
