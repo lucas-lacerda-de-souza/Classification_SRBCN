@@ -1,12 +1,12 @@
 # 🧠 ADVANCING THE DIAGNOSIS OF HEAD AND NECK SMALL ROUND BLUE CELL NEOPLASMS THROUGH ARTIFICIAL INTELLIGENCE
 
-**Author:** Lucas Lacerda de Souza
+# Author: Lucas Lacerda de Souza
 
-**Year:** 2026
+# Year: 2026
 
 ---
 
-**📖 1. Project Overview**
+# 📖 1. Project Overview
 
 This project implements a multimodal artificial intelligence framework for the diagnosis and prognostic stratification of head and neck small round blue cell neoplasms (SRBCNs). The framework integrates clinicopathological variables, quantitative nuclear morphometry, conventional machine learning, deep learning, transformer-based cellular modelling, foundation models, and survival prediction algorithms to analyse digitised haematoxylin and eosin (H&E) whole-slide images.
 
@@ -18,7 +18,7 @@ The study includes four major tumour groups:
 
 ---
 
-**🔬 2. Computational Pipeline**
+# 🔬 2. Computational Pipeline
 
 <img width="1280" height="854" alt="Figura 1" src="https://github.com/user-attachments/assets/d95b0e39-9bb2-4668-bee7-c3f9c0e9528f" />
 
@@ -35,7 +35,7 @@ The framework is intended for computational pathology research and proof-of-conc
 
 ---
 
-**💻 3. Environment and Hardware**
+# 💻 3. Environment and Hardware
 
 All experiments were performed using the following configuration:
 
@@ -53,7 +53,7 @@ All experiments were performed using the following configuration:
 
 ---
 
-**⚙️ 4. Environment Files**
+# ⚙️ 4. Environment Files
 **Conda Channels**
   * pytorch
   * nvidia
@@ -104,7 +104,7 @@ conda activate Classification_SRB
 
 ---
 
-**🗂️ 5. Dataset**
+# 🗂️ 5. Dataset
 
 A total of **675 cases** were included in this international multicentre study.
 
@@ -122,7 +122,7 @@ A total of **675 cases** were included in this international multicentre study.
 
 ---
 
-**🤖 6. Model Architectures**
+# 🤖 6. Model Architectures
 
 **📊 Conventional Machine Learning**
 
@@ -150,7 +150,7 @@ A total of **675 cases** were included in this international multicentre study.
 
 ---
 
-**🧬 7. Features Used**
+# 🧬 7. Features Used
 
 **👤 Clinicopathological Features**
 
@@ -178,7 +178,7 @@ A total of **675 cases** were included in this international multicentre study.
 
 ---
 
-**📂 8. Repository Structure**
+# 📂 8. Repository Structure
 
 DATA/                    → Synthetic example data and directory structures
 
@@ -198,7 +198,7 @@ LICENSE.txt              → Repository license
 
 ---
 
-**⚡ 9. Quick Start**
+# ⚡ 9. Quick Start
 **Run Inference**
 
 python INFERENCE.py \
@@ -207,7 +207,7 @@ python INFERENCE.py \
 
 ---
 
-**✅ 10. Compliance with TRIPOD-AI, STARD-AI and CLAIM 2024**
+# ✅ 10. Compliance with TRIPOD-AI, STARD-AI and CLAIM 2024
 
 This repository has been structured according to:
 
@@ -218,7 +218,7 @@ The guidelines were used for transparent, reproducible, and clinically relevant 
 
 ---
 
-**⚖️ 12. Ethics**
+# ⚖️ 11. Ethics
 
 This study was approved by:
 
@@ -230,7 +230,7 @@ All procedures were conducted in accordance with the Declaration of Helsinki. Al
 
 ---
 
-**📦 13. Data Availability**
+# 📦 12. Data Availability
 
 Due to ethical restrictions and patient confidentiality regulations:
 
@@ -246,13 +246,13 @@ To support reproducibility, this repository provides:
 
 ---
 
-** 💾 14. Code Availability** 
+# 💾 13. Code Availability
 
 We have made the codes publicly available online, along with model weights (https://github.com/lucas-lacerda-de-souza/Classification_SRB). All code was written with Python Python 3.12.11, along with PyTorch 2.8.0. The full implementation of the model, including the code and documentation, has been deposited in the Zenodo repository and is publicly available (https://doi.org/10.5281/zenodo.20383882).
 
 ---
 
-# 📚 15. Citation
+# 📚 14. Citation
 
 @article{delasouza2026srb,
   title={Advancing the Diagnosis of Head and Neck Small Round Blue Cell Neoplasms Through Artificial Intelligence},
@@ -262,7 +262,7 @@ We have made the codes publicly available online, along with model weights (http
 
 ---
 
-# 📜 16. License
+# 📜 15. License
 
 MIT License © 2026 Lucas Lacerda de Souza
 
