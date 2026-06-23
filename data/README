@@ -28,7 +28,6 @@ DATA/
 │       ├── Mesenchymal/
 │       ├── Neuroectodermal/
 │       └── Melanocytic/
-│
 └──
 Image characteristics:
 
@@ -84,16 +83,14 @@ These files provide supporting datasets, metadata, model specifications, and rep
 supplementary_data/
 │
 ├── supplement_1.xlsx
+├── supplement_2.xlsx
+├── supplementary_table_1.xlsx
 ├── supplementary_table_2.xlsx
 ├── supplementary_table_3.xlsx
 ├── supplementary_table_4.xlsx
 ├── supplementary_table_5.xlsx
 ├── supplementary_table_6.xlsx
-├── supplementary_table_7.xlsx
-├── supplementary_table_8.xlsx
-├── supplementary_table_9.xlsx
-├── supplementary_table_10.xlsx
-└── supplementary_table_11.xlsx
+└── 
 
 Supplements
 
@@ -104,7 +101,7 @@ Supplementary Table 2: Immunohistochemical and molecular profile of head and nec
 Supplementary Table 3: TRIPOD-AI checklist.
 Supplementary Table 4: STARD-AI checklist. 
 Supplementary Table 5: Description of the dataset of this study.
-Supplementary Table 6. Distribution of cases across the training, validation, test, and external validation cohorts according to biological tumour group. The dataset comprised 675 cases categorised as haematolymphoid (n = 463), neuroectodermal and neural crest-derived (n = 84), mesenchymal (n = 75), and melanocytic (n = 53) neoplasms. Cases were allocated to the training (70%), validation (10%), test (10%), and external validation (10%) cohorts whilst maintaining class balance. 
+Supplementary Table 6: Distribution of cases across the training, validation, test, and external validation cohorts according to biological tumour group. The dataset comprised 675 cases categorised as haematolymphoid (n = 463), neuroectodermal and neural crest-derived (n = 84), mesenchymal (n = 75), and melanocytic (n = 53) neoplasms. Cases were allocated to the training (70%), validation (10%), test (10%), and external validation (10%) cohorts whilst maintaining class balance. 
 
 
 🔒 Data Availability
