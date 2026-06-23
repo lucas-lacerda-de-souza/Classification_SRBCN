@@ -252,7 +252,7 @@ To support reproducibility, this repository provides:
 
 # 💾 13. Code Availability
 
-We have made the codes publicly available online, along with model weights ([https://github.com/lucas-lacerda-de-souza/Classification_SRB](https://github.com/lucas-lacerda-de-souza/Classification_SRBCN)). All code was written with Python Python 3.12.11, along with PyTorch 2.8.0. The full implementation of the model, including the code and documentation, has been deposited in the Zenodo repository and is publicly available (https://doi.org/10.5281/zenodo.20383882).
+We have made the codes publicly available online, along with model weights (https://github.com/lucas-lacerda-de-souza/Classification_SRBCN). All code was written with Python Python 3.12.11, along with PyTorch 2.8.0. The full implementation of the model, including the code and documentation, has been deposited in the Zenodo repository and is publicly available (https://doi.org/10.5281/zenodo.20383882).
 
 ---
 
