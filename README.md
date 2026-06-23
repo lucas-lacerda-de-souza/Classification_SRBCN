@@ -92,15 +92,16 @@ All experiments were performed using the following configuration:
 
 **Installation**
 
+```bash
 git clone https://github.com/lucas-lacerda-de-souza/Classification_SRB.git
-
 cd Classification_SRB
+```
 
 **Create Environment**
-
+```bash
 conda env create -f environment.yml
-
 conda activate Classification_SRB
+```
 
 ---
 
@@ -201,9 +202,11 @@ LICENSE.txt              → Repository license
 # ⚡ 9. Quick Start
 **Run Inference**
 
+```bash
 python INFERENCE.py \
     --input_dir ./data/example_slides \
     --output_dir ./results/
+```
 
 ---
 
