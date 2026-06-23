@@ -1,0 +1,279 @@
+📊 Results Overview
+
+🧬 Cohort Overview
+
+A total of 675 patients were included in this multicentre study of head and neck small round blue cell neoplasms (SRBCNs).
+
+Diagnostic distribution:
+
+Haematolymphoid tumours: 463 cases (68.6%)
+Neuroectodermal / neural crest-derived tumours: 84 cases (12.4%)
+Mesenchymal tumours: 75 cases (11.1%)
+Melanocytic tumours: 53 cases (7.9%)
+
+The cohort comprised 362 males (53.6%) and 313 females (46.4%), with a mean age of 41.8 ± 27.8 years.
+
+At the last follow-up:
+
+435 patients (64.4%) were alive
+240 patients (35.6%) had died
+
+🔬 Nuclear Morphometric Analysis
+
+Significant differences were observed across tumour groups for all evaluated nuclear morphometric variables (p < 0.0001).
+
+Tumour Group	Nuclear Area (μm²)	Perimeter (μm)	Circularity	Eccentricity
+Haematolymphoid	19.30	19.31	0.767	0.728
+Mesenchymal	17.81	17.61	0.783	0.770
+Neuroectodermal / Neural Crest	30.40	30.06	0.733	0.751
+Melanocytic	23.73	23.36	0.745	0.795
+
+Key findings:
+
+Neuroectodermal/neural crest-derived tumours demonstrated the largest nuclei.
+Melanocytic tumours exhibited the highest nuclear eccentricity.
+Mesenchymal tumours showed the greatest nuclear circularity.
+Haematolymphoid tumours displayed the lowest eccentricity values.
+
+🧠 XGBoost Multiclass Classification
+
+The XGBoost model integrating clinicopathological and nuclear morphometric variables demonstrated excellent performance.
+
+Internal Test Performance
+
+🏆 Accuracy: 0.980
+
+📌 Balanced Accuracy: 0.976
+
+📌 Macro Precision: 0.967
+
+📌 Macro Recall: 0.976
+
+📌 Macro F1-score: 0.971
+
+📌 Weighted Precision: 0.981
+
+📌 Weighted Recall: 0.980
+
+📌 Weighted F1-score: 0.980
+
+📌 Cohen's Kappa: 0.961
+
+📌 Matthews Correlation Coefficient: 0.961
+
+ROC-AUC
+
+Tumour Group	AUC
+Haematolymphoid	1.000
+Melanocytic	1.000
+Neuroectodermal / Neural Crest	1.000
+Mesenchymal	0.999
+
+Overall:
+
+Macro-average AUC: 0.9996
+Weighted-average AUC: 0.9996
+
+🔍 SHAP Explainability Analysis
+
+SHAP analysis demonstrated that age and nuclear morphometric features were the primary drivers of model predictions.
+
+Most influential variables:
+
+Age
+Nuclear perimeter
+Nuclear eccentricity
+Nuclear area
+
+Age was the dominant predictor for:
+
+Haematolymphoid tumours
+Mesenchymal tumours
+Neuroectodermal / neural crest-derived tumours
+
+Nuclear perimeter was the strongest predictor for melanocytic tumours.
+
+Sex and most anatomical site variables showed minimal influence on model decisions.
+
+🤖 Multimodal Deep Learning Classification
+
+Conventional CNN Architectures
+
+Model	Accuracy	AUROC
+AlexNet	69.8%	0.792
+MobileNet	75.1%	0.847
+InceptionV3	77.9%	0.881
+DenseNet121	82.7%	0.914
+Xception	81.3%	0.926
+ResNet50	86.9%	0.951
+
+Best Conventional CNN
+
+🏆 ResNet50
+
+Accuracy: 86.9%
+Precision: 85.4%
+Recall: 87.8%
+F1-score: 86.0%
+AUROC: 0.951
+Cohen's κ: 0.818
+
+🧬 CellViT++ Multimodal Framework
+
+CellViT++ achieved the highest performance among all multimodal architectures.
+
+Internal Test Performance
+
+🏆 Accuracy: 91.2%
+
+📌 Precision: 90.7%
+
+📌 Recall: 89.5%
+
+📌 F1-score: 89.9%
+
+📌 Specificity: 97.4%
+
+📌 AUROC: 0.973
+
+📌 Cohen's κ: 0.874
+
+These findings demonstrate the value of integrating cellular representations with clinicopathological and morphometric information.
+
+📈 Calibration Analysis
+
+Calibration improved progressively with increasing model complexity.
+
+Model	ECE	Brier Score
+AlexNet	0.093	0.214
+ResNet50	0.036	0.104
+CellViT++	0.024	0.082
+
+CellViT++ produced the most reliable probability estimates across all evaluated architectures.
+
+🌎 External Validation
+
+Performance decreased modestly in the independent external cohort, although the relative ranking of models remained unchanged.
+
+CellViT++
+
+🏆 Accuracy: 88.3%
+
+📌 Precision: 88.0%
+
+📌 Recall: 86.8%
+
+📌 F1-score: 87.3%
+
+📌 AUROC: 0.958
+
+📌 Cohen's κ: 0.842
+
+📌 ECE: 0.033
+
+📌 Brier Score: 0.095
+
+Best Conventional CNN (ResNet50)
+
+Accuracy: 84.2%
+F1-score: 83.5%
+AUROC: 0.931
+Specificity: 94.4%
+
+🏛️ Foundation Model Classification
+
+The foundation models demonstrated the strongest overall performance.
+
+Internal Test Cohort
+
+Model	Accuracy	F1-score	AUROC
+UNI	88.7%	87.7%	0.958
+Virchow	92.4%	91.7%	0.981
+
+External Validation Cohort
+
+Model	Accuracy	F1-score	AUROC
+UNI	84.3%	83.8%	0.944
+Virchow	89.8%	89.3%	0.972
+
+🏆 Virchow was the best-performing model across both internal and external validation cohorts.
+
+📈 Survival Analysis
+
+Kaplan–Meier analysis demonstrated significant differences in overall survival according to:
+
+Tumour group
+Diagnosis
+Anatomical location
+Nuclear area
+Nuclear perimeter
+Nuclear circularity
+Nuclear eccentricity
+
+No significant differences were observed for:
+
+Age (p = 0.589)
+Sex (p = 0.718)
+
+Multivariable Cox Regression
+
+Nuclear area remained independently associated with overall survival:
+
+HR = 1.02
+95% CI: 1.00–1.03
+p = 0.012
+
+🚀 XGBoost Survival Prediction
+
+The XGBoost survival model demonstrated strong prognostic performance.
+
+Harrell's C-index
+
+Cohort	C-index
+Training	0.976
+Validation	0.788
+Test	0.768
+
+Risk Stratification
+
+Within the independent test cohort:
+
+High-risk group: 68 patients
+Low-risk group: 67 patients
+
+Events:
+
+High-risk: 42 events
+Low-risk: 6 events
+
+Kaplan–Meier analysis demonstrated clear separation between predicted risk groups:
+
+📌 Log-rank p < 0.001
+
+Most Important Survival Predictors
+
+SHAP analysis identified:
+
+Age
+Reactive follicular hyperplasia
+Nuclear area
+Nuclear perimeter
+Diffuse large B-cell lymphoma (DLBCL)
+
+as the strongest contributors to survival prediction.
+
+🎯 Conclusion
+
+The proposed framework demonstrated:
+
+✅ Excellent XGBoost multiclass classification performance
+
+✅ Strong multimodal deep learning performance
+
+✅ Superior foundation model performance using Virchow
+
+✅ Robust external validation
+
+✅ Biologically interpretable SHAP explanations
+
+✅ Effective survival prediction and risk stratification
