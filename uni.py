@@ -1,18 +1,14 @@
-```python
-"""
+
 Advancing the Diagnosis of Head and Neck Small Round Blue Cell Neoplasms
 through Artificial Intelligence
 ----------------------------------------------------------------------------------
 Author: Lucas Lacerda de Souza
 
 Description:
-    This script implements a multimodal artificial intelligence framework for the
-    classification and prognostic stratification of head and neck small round blue
+    This script implements a multimodal artificial intelligence framework for the classification and prognostic stratification of head and neck small round blue
     cell neoplasms (SRBCNs).
 
-    The pipeline integrates histopathological image analysis, quantitative nuclear
-    morphometric features, clinicopathological variables, CellViT++ cellular
-    representations, and foundation model embeddings derived from UNI and Virchow.
+    The pipeline integrates histopathological image analysis, quantitative nuclear morphometric features, clinicopathological variables, CellViT++ cellular representations, and foundation model embeddings derived from UNI and Virchow.
 
     The framework supports:
         - XGBoost multiclass classification
