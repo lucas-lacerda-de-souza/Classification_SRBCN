@@ -1,6 +1,4 @@
-```python
-"""
-Virchow Pipeline for Head and Neck Small Round Blue Cell Neoplasms
+Advancing the Diagnosis of Head and Neck Small Round Blue Cell Neoplasms through Artificial Intelligence
 ----------------------------------------------------------------------------------
 Author: Lucas Lacerda de Souza
 
@@ -18,10 +16,11 @@ Dependencies:
     scikit-learn>=1.7.0
     tqdm>=4.67.0
     openpyxl>=3.1.0
-
-
 """
 
+# =========================
+# IMPORTS
+# =========================
 import argparse
 import json
 import os
